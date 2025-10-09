@@ -28,15 +28,6 @@ body {
     line-height: 1.6;
 }
 
-.ereklamo-logo {
-  align-self: stretch;
-  flex-shrink: 0;
-  margin-top: 4px;
-  height: 50px;
-  position: relative;
-  object-fit: cover;
-}
-
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -664,14 +655,15 @@ body {
     border-top: 2px solid var(--border);
 }
 
-.form-actions-end {
+.form-actions-bottom {
     display: flex;
     justify-content: flex-end;
     gap: 16px;
     margin-top: 40px;
     padding-top: 32px;
-  
+
 }
+
 
 /* Responsive Design */
 @media (max-width: 768px) {

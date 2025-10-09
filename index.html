@@ -6,7 +6,6 @@
     <title>Submit Complaint - eReklamo</title>
     <link rel="stylesheet" href="index.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="logos/eReklamo_Icon.png">
 </head>
 <body>
     <!-- Header -->
@@ -14,7 +13,12 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <img class="ereklamo-logo" src="logos/eReklamo_White.png" />
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <h1 class="logo-text">eReklamo</h1>
                 </div>
                 <div class="header-right">
                     <span class="user-status" id="userStatus">Guest User</span>
@@ -73,25 +77,36 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="category">Category *</label>
+                                <label for="category">Complaint Category *</label>
                                 <select id="category" name="category" required>
                                     <option value="">Select a category</option>
                                     <option value="infrastructure">Infrastructure</option>
-                                    <option value="environment">Environment</option>/option>
-                                    <option value="peace_and_order">Peace & Order</option>
-                                    <option value="health_and_sanitation">Health & Sanitation</option>
+                                    <option value="environment">Environment</option>
+                                    <option value="peace_and_order">Peace and Order</option>
+                                    <option value="health_and_sanitation">Health and Sanitation</option>
                                     <option value="public_safety">Public Safety</option>
-                                    <option value="traffic_and_transportation">Traffic & Transportation</option>
+                                    <option value="traffic_and_transportation">Traffic and Transportation</option>
                                     <option value="others">Others</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
-                                <label for="subcategory">Subcategory *</label>
+                                <label for="subcategory">Complaint Subcategory *</label>
                                 <select id="subcategory" name="subcategory" required disabled>
                                     <option value="">Select a subcategory</option>
                                 </select>
                             </div>
+                        </div>
+
+                        <div class="form-group" id="otherCategoryGroup" style="display: none;">
+                            <label for="otherCategory">Please specify your complaint *</label>
+                            <input 
+                                type="text" 
+                                id="otherCategory" 
+                                name="otherCategory" 
+                                placeholder="Please describe your concern in brief"
+                            >
+                            <p class="field-hint">This field is required when "Others" category is selected</p>
                         </div>
 
                         <div class="form-group">
@@ -236,7 +251,7 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <div class="form-actions-end">
+                    <div class="form-actions-bottom">
                         <button type="button" class="btn btn-outline" onclick="window.location.href='landing_page.html'">
                             Cancel
                         </button>

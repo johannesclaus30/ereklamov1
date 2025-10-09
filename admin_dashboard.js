@@ -69,6 +69,8 @@ let complaints = [
 ];
 
 let selectedComplaint = null;
+let readNotifications = JSON.parse(localStorage.getItem('readNotifications') || '[]');
+let complaintChart = null;
 
 const statusLabels = {
     'pending': 'Pending',
@@ -88,12 +90,19 @@ const statusColors = {
 window.addEventListener('DOMContentLoaded', function() {
     updateStats();
     renderComplaints(complaints);
+    updateNotifications();
+    initializeChart();
     
     // Set up search
     document.getElementById('searchInput').addEventListener('input', filterComplaints);
     
     // Set up status filter
     document.getElementById('statusFilter').addEventListener('change', filterComplaints);
+    
+    // Set up chart period filter
+    document.getElementById('chartPeriod').addEventListener('change', function() {
+        updateChart(this.value);
+    });
 });
 
 function updateStats() {
@@ -204,6 +213,12 @@ function handleStatusChange(complaintId, newStatus) {
     
     updateStats();
     filterComplaints();
+    updateNotifications();
+    
+    // Update chart with current period
+    const currentPeriod = document.getElementById('chartPeriod').value;
+    updateChart(currentPeriod);
+    
     showToast('Complaint status updated successfully!', 'success');
 }
 
@@ -285,6 +300,12 @@ function executeDelete() {
         
         updateStats();
         filterComplaints();
+        updateNotifications();
+        
+        // Update chart with current period
+        const currentPeriod = document.getElementById('chartPeriod').value;
+        updateChart(currentPeriod);
+        
         showToast(`Complaint ${complaint.trackingNumber} deleted successfully!`, 'success');
         
         closeDeleteModal();
@@ -324,6 +345,8 @@ function showToast(message, type = 'info') {
 window.addEventListener('click', function(event) {
     const detailsModal = document.getElementById('detailsModal');
     const deleteModal = document.getElementById('deleteConfirmModal');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    const notificationBtn = document.getElementById('notificationBtn');
     
     if (event.target === detailsModal) {
         closeDetailsModal();
@@ -331,4 +354,279 @@ window.addEventListener('click', function(event) {
     if (event.target === deleteModal) {
         closeDeleteModal();
     }
+    
+    // Close notification dropdown when clicking outside
+    if (notificationDropdown && !notificationDropdown.contains(event.target) && 
+        !notificationBtn.contains(event.target)) {
+        notificationDropdown.classList.remove('show');
+    }
 });
+
+// Notification Functions
+function updateNotifications() {
+    // Get recent complaints (last 5, sorted by date)
+    const recentComplaints = [...complaints]
+        .sort((a, b) => new Date(b.dateSubmitted) - new Date(a.dateSubmitted))
+        .slice(0, 5);
+    
+    const notificationList = document.getElementById('notificationList');
+    const notificationBadge = document.getElementById('notificationBadge');
+    
+    // Count unread notifications
+    const unreadCount = recentComplaints.filter(c => !readNotifications.includes(c.id)).length;
+    
+    // Update badge
+    if (unreadCount > 0) {
+        notificationBadge.textContent = unreadCount;
+        notificationBadge.style.display = 'flex';
+    } else {
+        notificationBadge.style.display = 'none';
+    }
+    
+    // Render notifications
+    if (recentComplaints.length === 0) {
+        notificationList.innerHTML = `
+            <div class="notification-empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <p>No recent complaints</p>
+            </div>
+        `;
+    } else {
+        notificationList.innerHTML = recentComplaints.map(complaint => {
+            const isUnread = !readNotifications.includes(complaint.id);
+            const timeAgo = getTimeAgo(complaint.dateSubmitted);
+            
+            return `
+                <div class="notification-item ${isUnread ? 'unread' : ''}" onclick="viewComplaintFromNotification('${complaint.id}')">
+                    <div class="notification-content">
+                        <div class="notification-title">
+                            ${isUnread ? '<span class="notification-dot"></span>' : ''}
+                            <strong>${complaint.category}</strong> - ${complaint.subcategory}
+                        </div>
+                        <div class="notification-desc">${truncateText(complaint.description, 60)}</div>
+                        <div class="notification-meta">
+                            <span class="notification-location">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                ${complaint.location}
+                            </span>
+                            <span class="notification-time">${timeAgo}</span>
+                        </div>
+                    </div>
+                    <span class="notification-status ${statusColors[complaint.status]}">
+                        ${statusLabels[complaint.status]}
+                    </span>
+                </div>
+            `;
+        }).join('');
+    }
+}
+
+function toggleNotifications() {
+    const dropdown = document.getElementById('notificationDropdown');
+    dropdown.classList.toggle('show');
+}
+
+function closeNotifications() {
+    const dropdown = document.getElementById('notificationDropdown');
+    dropdown.classList.remove('show');
+}
+
+function markAllAsRead() {
+    const recentComplaints = [...complaints]
+        .sort((a, b) => new Date(b.dateSubmitted) - new Date(a.dateSubmitted))
+        .slice(0, 5);
+    
+    readNotifications = [...new Set([...readNotifications, ...recentComplaints.map(c => c.id)])];
+    localStorage.setItem('readNotifications', JSON.stringify(readNotifications));
+    
+    updateNotifications();
+}
+
+function viewComplaintFromNotification(complaintId) {
+    // Mark as read
+    if (!readNotifications.includes(complaintId)) {
+        readNotifications.push(complaintId);
+        localStorage.setItem('readNotifications', JSON.stringify(readNotifications));
+        updateNotifications();
+    }
+    
+    // Close notification dropdown
+    closeNotifications();
+    
+    // View complaint details
+    viewComplaintDetails(complaintId);
+}
+
+function getTimeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - date) / 1000);
+    
+    if (diffInSeconds < 60) {
+        return 'Just now';
+    } else if (diffInSeconds < 3600) {
+        const minutes = Math.floor(diffInSeconds / 60);
+        return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`;
+    } else if (diffInSeconds < 86400) {
+        const hours = Math.floor(diffInSeconds / 3600);
+        return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
+    } else if (diffInSeconds < 604800) {
+        const days = Math.floor(diffInSeconds / 86400);
+        return `${days} ${days === 1 ? 'day' : 'days'} ago`;
+    } else {
+        return formatDate(dateString);
+    }
+}
+
+function truncateText(text, maxLength) {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+}
+
+// Chart Functions
+function initializeChart() {
+    const ctx = document.getElementById('complaintChart').getContext('2d');
+    
+    complaintChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Number of Complaints',
+                data: [],
+                backgroundColor: [
+                    'rgba(255, 107, 53, 0.8)',
+                    'rgba(59, 130, 246, 0.8)',
+                    'rgba(16, 185, 129, 0.8)',
+                    'rgba(245, 158, 11, 0.8)',
+                    'rgba(239, 68, 68, 0.8)',
+                    'rgba(139, 92, 246, 0.8)',
+                    'rgba(236, 72, 153, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(255, 107, 53, 1)',
+                    'rgba(59, 130, 246, 1)',
+                    'rgba(16, 185, 129, 1)',
+                    'rgba(245, 158, 11, 1)',
+                    'rgba(239, 68, 68, 1)',
+                    'rgba(139, 92, 246, 1)',
+                    'rgba(236, 72, 153, 1)'
+                ],
+                borderWidth: 2,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleFont: {
+                        size: 14,
+                        weight: 600
+                    },
+                    bodyFont: {
+                        size: 13
+                    },
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    borderWidth: 1,
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((context.parsed.y / total) * 100).toFixed(1);
+                            return `${context.parsed.y} complaints (${percentage}%)`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        font: {
+                            size: 12
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        font: {
+                            size: 12,
+                            weight: 500
+                        }
+                    },
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+    
+    updateChart('all');
+}
+
+function updateChart(period) {
+    const filteredComplaints = filterComplaintsByPeriod(complaints, period);
+    
+    // Count complaints by category
+    const categoryCounts = {};
+    filteredComplaints.forEach(complaint => {
+        const category = complaint.category;
+        categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+    });
+    
+    // Sort by count (descending)
+    const sortedCategories = Object.entries(categoryCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 7); // Show top 7 categories
+    
+    const labels = sortedCategories.map(([category]) => category);
+    const data = sortedCategories.map(([, count]) => count);
+    
+    // Update chart data
+    complaintChart.data.labels = labels;
+    complaintChart.data.datasets[0].data = data;
+    complaintChart.update();
+}
+
+function filterComplaintsByPeriod(complaints, period) {
+    if (period === 'all') {
+        return complaints;
+    }
+    
+    const now = new Date();
+    const filtered = complaints.filter(complaint => {
+        const complaintDate = new Date(complaint.dateSubmitted);
+        
+        if (period === 'week') {
+            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            return complaintDate >= weekAgo;
+        } else if (period === 'month') {
+            const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+            return complaintDate >= monthAgo;
+        }
+        
+        return true;
+    });
+    
+    return filtered;
+}

@@ -15,7 +15,7 @@ const subcategories = {
         { value: 'airwater_pollution', label: 'Air and Water Pollution' },
         { value: 'littering', label: 'Littering' },
         { value: 'illegal_tree_cutting', label: 'Illegal Tree Cutting' },
-        { value: 'garbage_missiong_collection', label: 'Garbage Missing Collectioin' },
+        { value: 'garbage_missing_collection', label: 'Garbage Missing Collection' },
         { value: 'burning_of_garbage', label: 'Burning of Garbage' },
         { value: 'nonsweeping_of_streets', label: 'Non-sweeping of Streets' }
     ],
@@ -51,7 +51,6 @@ const subcategories = {
     ]
 };
 
-// { value: '', label: '' }
 // Photo and video storage
 let photos = [];
 let video = null;
@@ -59,20 +58,42 @@ let video = null;
 // Category change handler
 document.getElementById('category').addEventListener('change', function() {
     const subcategorySelect = document.getElementById('subcategory');
+    const otherCategoryGroup = document.getElementById('otherCategoryGroup');
+    const otherCategoryInput = document.getElementById('otherCategory');
     const category = this.value;
     
     subcategorySelect.innerHTML = '<option value="">Select a subcategory</option>';
     
-    if (category && subcategories[category]) {
-        subcategorySelect.disabled = false;
-        subcategories[category].forEach(sub => {
-            const option = document.createElement('option');
-            option.value = sub.value;
-            option.textContent = sub.label;
-            subcategorySelect.appendChild(option);
-        });
-    } else {
+    // Check if "Others" category is selected
+    if (category === 'others') {
+        // Show the "Other" text field
+        otherCategoryGroup.style.display = 'block';
+        otherCategoryInput.setAttribute('required', 'required');
+        
+        // Disable and clear subcategory
         subcategorySelect.disabled = true;
+        subcategorySelect.removeAttribute('required');
+        subcategorySelect.value = '';
+    } else {
+        // Hide the "Other" text field
+        otherCategoryGroup.style.display = 'none';
+        otherCategoryInput.removeAttribute('required');
+        otherCategoryInput.value = '';
+        
+        // Enable subcategory for other categories
+        subcategorySelect.setAttribute('required', 'required');
+        
+        if (category && subcategories[category]) {
+            subcategorySelect.disabled = false;
+            subcategories[category].forEach(sub => {
+                const option = document.createElement('option');
+                option.value = sub.value;
+                option.textContent = sub.label;
+                subcategorySelect.appendChild(option);
+            });
+        } else {
+            subcategorySelect.disabled = true;
+        }
     }
 });
 
@@ -332,10 +353,26 @@ document.getElementById('complaintForm').addEventListener('submit', function(e) 
     const subcategory = document.getElementById('subcategory').value;
     const description = document.getElementById('description').value;
     const location = document.getElementById('location').value;
+    const otherCategory = document.getElementById('otherCategory').value;
     
-    if (!category || !subcategory || !description || !location) {
+    // Validate required fields
+    if (!category || !description || !location) {
         alert('Please fill in all required fields');
         return;
+    }
+    
+    // If "Others" category is selected, validate the "Other" text field
+    if (category === 'others') {
+        if (!otherCategory || otherCategory.trim() === '') {
+            alert('Please specify your complaint in the text field');
+            return;
+        }
+    } else {
+        // For other categories, validate subcategory
+        if (!subcategory) {
+            alert('Please select a subcategory');
+            return;
+        }
     }
     
     // Generate tracking number
