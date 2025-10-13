@@ -97,6 +97,11 @@ document.getElementById('category').addEventListener('change', function() {
     }
 });
 
+// Location cascading dropdowns
+// Replace the Fetch API calls with your own implementation
+
+
+
 // Character counter for description
 document.getElementById('description').addEventListener('input', function() {
     document.getElementById('charCount').textContent = this.value.length;

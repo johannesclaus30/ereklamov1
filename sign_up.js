@@ -1,3 +1,11 @@
+// Initialize address selector on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize the Philippine address selector
+    if (typeof window.initializeAddressSelector === 'function') {
+        window.initializeAddressSelector();
+    }
+});
+
 // Toggle password visibility
 function togglePassword(inputId, iconId) {
     const passwordInput = document.getElementById(inputId);
@@ -42,10 +50,12 @@ document.getElementById('signUpForm').addEventListener('submit', function(e) {
     const lastName = document.getElementById('lastName').value;
     const email = document.getElementById('email').value;
     const phone = document.getElementById('phone').value;
-    const streetAddress = document.getElementById('streetAddress').value;
-    const barangay = document.getElementById('barangay').value;
-    const city = document.getElementById('city').value;
+    const region = document.getElementById('region').value;
     const province = document.getElementById('province').value;
+    const city = document.getElementById('city').value;
+    const barangay = document.getElementById('barangay').value;
+    const street = document.getElementById('street').value;
+    const houseNumber = document.getElementById('houseNumber').value;
     const zipCode = document.getElementById('zipCode').value;
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
@@ -57,8 +67,8 @@ document.getElementById('signUpForm').addEventListener('submit', function(e) {
         return;
     }
     
-    if (!streetAddress || !barangay || !city || !province || !zipCode) {
-        alert('Please fill in all address fields');
+    if (!region || !province || !city || !barangay || !street) {
+        alert('Please fill in all required address fields');
         return;
     }
     
@@ -77,8 +87,17 @@ document.getElementById('signUpForm').addEventListener('submit', function(e) {
         return;
     }
     
+    // Get the text values from selects
+    const regionText = document.getElementById('region').options[document.getElementById('region').selectedIndex].text;
+    const provinceText = document.getElementById('province').options[document.getElementById('province').selectedIndex].text;
+    const cityText = document.getElementById('city').options[document.getElementById('city').selectedIndex].text;
+    const barangayText = document.getElementById('barangay').options[document.getElementById('barangay').selectedIndex].text;
+    
     // Construct complete address
-    const completeAddress = `${streetAddress}, ${barangay}, ${city}, ${province} ${zipCode}`;
+    let completeAddress = street;
+    if (houseNumber) completeAddress = houseNumber + ' ' + completeAddress;
+    completeAddress += `, ${barangayText}, ${cityText}, ${provinceText}, ${regionText}`;
+    if (zipCode) completeAddress += ` ${zipCode}`;
     
     // Store user data
     const userData = {
@@ -87,10 +106,12 @@ document.getElementById('signUpForm').addEventListener('submit', function(e) {
         email,
         phone,
         address: {
-            street: streetAddress,
-            barangay,
-            city,
-            province,
+            region: regionText,
+            province: provinceText,
+            city: cityText,
+            barangay: barangayText,
+            street,
+            houseNumber,
             zipCode,
             complete: completeAddress
         }

@@ -1,3 +1,36 @@
+// Category color mapping
+const categoryColors = {
+    'Infrastructure': 'rgba(255, 107, 53, 0.8)',
+    'Public Safety': 'rgba(59, 130, 246, 0.8)',
+    'Utilities': 'rgba(16, 185, 129, 0.8)',
+    'Environment': 'rgba(245, 158, 11, 0.8)',
+    'Health and Sanitation': 'rgba(239, 68, 68, 0.8)',
+    'Traffic and Transportation': 'rgba(139, 92, 246, 0.8)',
+    'Administrative': 'rgba(236, 72, 153, 0.8)',
+    'Community Services': 'rgba(20, 184, 166, 0.8)',
+    'Peace and Order': 'rgba(34, 197, 94, 0.8)'
+};
+
+const categoryBorderColors = {
+    'Infrastructure': 'rgba(255, 107, 53, 1)',
+    'Public Safety': 'rgba(59, 130, 246, 1)',
+    'Utilities': 'rgba(16, 185, 129, 1)',
+    'Environment': 'rgba(245, 158, 11, 1)',
+    'Health and Sanitation': 'rgba(239, 68, 68, 1)',
+    'Traffic and Transportation': 'rgba(139, 92, 246, 1)',
+    'Administrative': 'rgba(236, 72, 153, 1)',
+    'Community Services': 'rgba(20, 184, 166, 1)',
+    'Peace and Order': 'rgba(34, 197, 94, 1)'
+};
+
+function getCategoryColor(category) {
+    return categoryColors[category] || 'rgba(158, 158, 158, 0.8)';
+}
+
+function getCategoryBorderColor(category) {
+    return categoryBorderColors[category] || 'rgba(158, 158, 158, 1)';
+}
+
 // Mock complaint data
 let complaints = [
     {
@@ -6,7 +39,13 @@ let complaints = [
         category: 'Infrastructure',
         subcategory: 'Road Damage',
         description: 'Large pothole on Main Street causing traffic issues',
-        location: '123 Main Street',
+        country: 'Philippines',
+        region: 'National Capital Region (NCR)',
+        province: 'Metro Manila',
+        city: 'Manila',
+        barangay: 'Barangay 1',
+        street: 'Main Street',
+        location: 'Main Street, Barangay 1, Manila, Metro Manila, NCR',
         status: 'in-progress',
         dateSubmitted: '2024-01-15',
         submittedBy: 'juan.delacruz@email.com'
@@ -17,7 +56,13 @@ let complaints = [
         category: 'Public Safety',
         subcategory: 'Street Lighting',
         description: 'Broken street light near the park',
-        location: '456 Park Avenue',
+        country: 'Philippines',
+        region: 'National Capital Region (NCR)',
+        province: 'Metro Manila',
+        city: 'Quezon City',
+        barangay: 'Barangay 2',
+        street: 'Commonwealth Avenue',
+        location: 'Commonwealth Avenue, Barangay 2, Quezon City, Metro Manila, NCR',
         status: 'resolved',
         dateSubmitted: '2024-01-10',
         submittedBy: 'maria.santos@email.com'
@@ -25,10 +70,16 @@ let complaints = [
     {
         id: '3',
         trackingNumber: 'ERK-2024-001298',
-        category: 'Sanitation',
+        category: 'Health and Sanitation',
         subcategory: 'Waste Collection',
         description: 'Garbage not collected for 3 weeks',
-        location: '789 Oak Street',
+        country: 'Philippines',
+        region: 'Region VII (Central Visayas)',
+        province: 'Cebu',
+        city: 'Cebu City',
+        barangay: 'Barangay 3',
+        street: 'Osmena Boulevard',
+        location: 'Osmena Boulevard, Barangay 3, Cebu City, Cebu, Central Visayas',
         status: 'pending',
         dateSubmitted: '2024-01-22',
         submittedBy: 'pedro.reyes@email.com'
@@ -36,10 +87,16 @@ let complaints = [
     {
         id: '4',
         trackingNumber: 'ERK-2024-001056',
-        category: 'Noise Complaint',
-        subcategory: 'Construction',
+        category: 'Peace and Order',
+        subcategory: 'Noise Disturbance',
         description: 'Construction noise at night beyond permitted hours',
-        location: '321 Elm Street',
+        country: 'Philippines',
+        region: 'Region XI (Davao Region)',
+        province: 'Davao del Sur',
+        city: 'Davao City',
+        barangay: 'Barangay 1',
+        street: 'J.P. Laurel Avenue',
+        location: 'J.P. Laurel Avenue, Barangay 1, Davao City, Davao del Sur, Davao Region',
         status: 'rejected',
         dateSubmitted: '2024-01-05',
         submittedBy: 'Guest User'
@@ -48,9 +105,15 @@ let complaints = [
         id: '5',
         trackingNumber: 'ERK-2024-001145',
         category: 'Infrastructure',
-        subcategory: 'Drainage',
+        subcategory: 'Drainage Issues',
         description: 'Clogged drainage causing flooding during rain',
-        location: '555 River Road',
+        country: 'Philippines',
+        region: 'Region III (Central Luzon)',
+        province: 'Pampanga',
+        city: 'Angeles City',
+        barangay: 'Barangay 4',
+        street: 'MacArthur Highway',
+        location: 'MacArthur Highway, Barangay 4, Angeles City, Pampanga, Central Luzon',
         status: 'resolved',
         dateSubmitted: '2024-01-08',
         submittedBy: 'ana.garcia@email.com'
@@ -58,10 +121,16 @@ let complaints = [
     {
         id: '6',
         trackingNumber: 'ERK-2024-001367',
-        category: 'Public Safety',
-        subcategory: 'Traffic',
+        category: 'Traffic and Transportation',
+        subcategory: 'Missing Signage',
         description: 'Missing stop sign at intersection',
-        location: 'Main St & 2nd Ave',
+        country: 'Philippines',
+        region: 'Region IV-A (CALABARZON)',
+        province: 'Laguna',
+        city: 'Calamba City',
+        barangay: 'Barangay 5',
+        street: 'National Highway',
+        location: 'National Highway, Barangay 5, Calamba City, Laguna, CALABARZON',
         status: 'pending',
         dateSubmitted: '2024-01-25',
         submittedBy: 'carlos.lopez@email.com'
@@ -92,6 +161,7 @@ window.addEventListener('DOMContentLoaded', function() {
     renderComplaints(complaints);
     updateNotifications();
     initializeChart();
+    populateChartLocationFilters();
     
     // Set up search
     document.getElementById('searchInput').addEventListener('input', filterComplaints);
@@ -99,10 +169,12 @@ window.addEventListener('DOMContentLoaded', function() {
     // Set up status filter
     document.getElementById('statusFilter').addEventListener('change', filterComplaints);
     
-    // Set up chart period filter
-    document.getElementById('chartPeriod').addEventListener('change', function() {
-        updateChart(this.value);
-    });
+    // Set up chart filters
+    document.getElementById('chartPeriod').addEventListener('change', updateChartWithFilters);
+    document.getElementById('chartRegionFilter').addEventListener('change', handleChartRegionChange);
+    document.getElementById('chartProvinceFilter').addEventListener('change', handleChartProvinceChange);
+    document.getElementById('chartCityFilter').addEventListener('change', handleChartCityChange);
+    document.getElementById('chartBarangayFilter').addEventListener('change', updateChartWithFilters);
 });
 
 function updateStats() {
@@ -192,12 +264,15 @@ function filterComplaints() {
     const statusFilter = document.getElementById('statusFilter').value;
     
     const filtered = complaints.filter(complaint => {
+        // Search filter
         const matchesSearch = 
             complaint.trackingNumber.toLowerCase().includes(searchTerm) ||
             complaint.description.toLowerCase().includes(searchTerm) ||
             complaint.location.toLowerCase().includes(searchTerm) ||
-            complaint.category.toLowerCase().includes(searchTerm);
+            complaint.category.toLowerCase().includes(searchTerm) ||
+            (complaint.street && complaint.street.toLowerCase().includes(searchTerm));
         
+        // Status filter
         const matchesStatus = statusFilter === 'all' || complaint.status === statusFilter;
         
         return matchesSearch && matchesStatus;
@@ -215,9 +290,8 @@ function handleStatusChange(complaintId, newStatus) {
     filterComplaints();
     updateNotifications();
     
-    // Update chart with current period
-    const currentPeriod = document.getElementById('chartPeriod').value;
-    updateChart(currentPeriod);
+    // Update chart with filters
+    updateChartWithFilters();
     
     showToast('Complaint status updated successfully!', 'success');
 }
@@ -302,9 +376,8 @@ function executeDelete() {
         filterComplaints();
         updateNotifications();
         
-        // Update chart with current period
-        const currentPeriod = document.getElementById('chartPeriod').value;
-        updateChart(currentPeriod);
+        // Update chart with filters
+        updateChartWithFilters();
         
         showToast(`Complaint ${complaint.trackingNumber} deleted successfully!`, 'success');
         
@@ -581,15 +654,96 @@ function initializeChart() {
         }
     });
     
-    updateChart('all');
+    updateChart(complaints);
+    initializeSubcategoryChart();
 }
 
-function updateChart(period) {
-    const filteredComplaints = filterComplaintsByPeriod(complaints, period);
-    
+let subcategoryChart = null;
+
+function initializeSubcategoryChart() {
+    const ctx = document.getElementById('subcategoryChart').getContext('2d');
+    subcategoryChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Complaints',
+                data: [],
+                backgroundColor: [],
+                borderColor: [],
+                borderWidth: 2,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            indexAxis: 'y', // Horizontal bar chart
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleFont: {
+                        size: 14,
+                        weight: 600
+                    },
+                    bodyFont: {
+                        size: 13
+                    },
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    borderWidth: 1,
+                    callbacks: {
+                        title: function(context) {
+                            return context[0].label;
+                        },
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((context.parsed.x / total) * 100).toFixed(1);
+                            return `${context.parsed.x} complaints (${percentage}%)`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        font: {
+                            size: 12
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    }
+                },
+                y: {
+                    ticks: {
+                        font: {
+                            size: 11,
+                            weight: 500
+                        },
+                        autoSkip: false
+                    },
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+}
+
+function updateChart(complaintsToChart) {
     // Count complaints by category
     const categoryCounts = {};
-    filteredComplaints.forEach(complaint => {
+    complaintsToChart.forEach(complaint => {
         const category = complaint.category;
         categoryCounts[category] = (categoryCounts[category] || 0) + 1;
     });
@@ -608,6 +762,89 @@ function updateChart(period) {
     complaintChart.update();
 }
 
+function updateChartWithFilters() {
+    const period = document.getElementById('chartPeriod').value;
+    const regionFilter = document.getElementById('chartRegionFilter').value;
+    const provinceFilter = document.getElementById('chartProvinceFilter').value;
+    const cityFilter = document.getElementById('chartCityFilter').value;
+    const barangayFilter = document.getElementById('chartBarangayFilter').value;
+    
+    // Filter complaints by period
+    let filteredComplaints = filterComplaintsByPeriod(complaints, period);
+    
+    // Filter by location
+    filteredComplaints = filteredComplaints.filter(complaint => {
+        const matchesRegion = regionFilter === 'all' || complaint.region === regionFilter;
+        const matchesProvince = provinceFilter === 'all' || complaint.province === provinceFilter;
+        const matchesCity = cityFilter === 'all' || complaint.city === cityFilter;
+        const matchesBarangay = barangayFilter === 'all' || complaint.barangay === barangayFilter;
+        
+        return matchesRegion && matchesProvince && matchesCity && matchesBarangay;
+    });
+    
+    updateChart(filteredComplaints);
+    updateSubcategoryChart(filteredComplaints);
+}
+
+function updateSubcategoryChart(complaintsToChart) {
+    // Count complaints by subcategory and track category
+    const subcategoryData = {};
+    complaintsToChart.forEach(complaint => {
+        const key = `${complaint.category} - ${complaint.subcategory}`;
+        if (!subcategoryData[key]) {
+            subcategoryData[key] = {
+                count: 0,
+                category: complaint.category
+            };
+        }
+        subcategoryData[key].count++;
+    });
+    
+    // Sort by count (descending) and take top 15
+    const sortedSubcategories = Object.entries(subcategoryData)
+        .sort((a, b) => b[1].count - a[1].count)
+        .slice(0, 15);
+    
+    const labels = sortedSubcategories.map(([subcategory]) => subcategory);
+    const data = sortedSubcategories.map(([, info]) => info.count);
+    const backgroundColors = sortedSubcategories.map(([, info]) => getCategoryColor(info.category));
+    const borderColors = sortedSubcategories.map(([, info]) => getCategoryColor(info.category));
+    
+    // Update chart data
+    subcategoryChart.data.labels = labels;
+    subcategoryChart.data.datasets[0].data = data;
+    subcategoryChart.data.datasets[0].backgroundColor = backgroundColors;
+    subcategoryChart.data.datasets[0].borderColor = borderColors;
+    subcategoryChart.update();
+}
+
+function toggleSubcategoryChart() {
+    const section = document.getElementById('subcategoryChartSection');
+    const button = document.getElementById('toggleSubcategoryBtn');
+    
+    if (section.style.display === 'none') {
+        section.style.display = 'block';
+        button.classList.add('active');
+        button.innerHTML = `
+            <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+            Hide Detailed Breakdown
+        `;
+        // Update subcategory chart with current filters
+        updateChartWithFilters();
+    } else {
+        section.style.display = 'none';
+        button.classList.remove('active');
+        button.innerHTML = `
+            <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+            View Detailed Breakdown by Subcategory
+        `;
+    }
+}
+
 function filterComplaintsByPeriod(complaints, period) {
     if (period === 'all') {
         return complaints;
@@ -623,10 +860,151 @@ function filterComplaintsByPeriod(complaints, period) {
         } else if (period === 'month') {
             const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
             return complaintDate >= monthAgo;
+        } else if (period === 'year') {
+            const yearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+            return complaintDate >= yearAgo;
         }
         
         return true;
     });
     
     return filtered;
+}
+
+// Chart location filter functions
+function populateChartLocationFilters() {
+    // Get unique regions
+    const regions = [...new Set(complaints.map(c => c.region))].sort();
+    const regionSelect = document.getElementById('chartRegionFilter');
+    
+    regions.forEach(region => {
+        const option = document.createElement('option');
+        option.value = region;
+        option.textContent = region;
+        regionSelect.appendChild(option);
+    });
+}
+
+function handleChartRegionChange() {
+    const regionFilter = document.getElementById('chartRegionFilter').value;
+    const provinceSelect = document.getElementById('chartProvinceFilter');
+    const citySelect = document.getElementById('chartCityFilter');
+    const barangaySelect = document.getElementById('chartBarangayFilter');
+    
+    // Reset dependent dropdowns
+    provinceSelect.innerHTML = '<option value="all">All Provinces</option>';
+    citySelect.innerHTML = '<option value="all">All Cities</option>';
+    barangaySelect.innerHTML = '<option value="all">All Barangays</option>';
+    
+    citySelect.disabled = true;
+    barangaySelect.disabled = true;
+    
+    if (regionFilter === 'all') {
+        provinceSelect.disabled = true;
+        updateChartWithFilters();
+        return;
+    }
+    
+    // Get unique provinces for selected region
+    const provinces = [...new Set(
+        complaints
+            .filter(c => c.region === regionFilter)
+            .map(c => c.province)
+    )].sort();
+    
+    provinces.forEach(province => {
+        const option = document.createElement('option');
+        option.value = province;
+        option.textContent = province;
+        provinceSelect.appendChild(option);
+    });
+    
+    provinceSelect.disabled = false;
+    updateChartWithFilters();
+}
+
+function handleChartProvinceChange() {
+    const regionFilter = document.getElementById('chartRegionFilter').value;
+    const provinceFilter = document.getElementById('chartProvinceFilter').value;
+    const citySelect = document.getElementById('chartCityFilter');
+    const barangaySelect = document.getElementById('chartBarangayFilter');
+    
+    // Reset dependent dropdowns
+    citySelect.innerHTML = '<option value="all">All Cities</option>';
+    barangaySelect.innerHTML = '<option value="all">All Barangays</option>';
+    
+    barangaySelect.disabled = true;
+    
+    if (provinceFilter === 'all') {
+        citySelect.disabled = true;
+        updateChartWithFilters();
+        return;
+    }
+    
+    // Get unique cities for selected province
+    const cities = [...new Set(
+        complaints
+            .filter(c => c.region === regionFilter && c.province === provinceFilter)
+            .map(c => c.city)
+    )].sort();
+    
+    cities.forEach(city => {
+        const option = document.createElement('option');
+        option.value = city;
+        option.textContent = city;
+        citySelect.appendChild(option);
+    });
+    
+    citySelect.disabled = false;
+    updateChartWithFilters();
+}
+
+function handleChartCityChange() {
+    const regionFilter = document.getElementById('chartRegionFilter').value;
+    const provinceFilter = document.getElementById('chartProvinceFilter').value;
+    const cityFilter = document.getElementById('chartCityFilter').value;
+    const barangaySelect = document.getElementById('chartBarangayFilter');
+    
+    // Reset barangay dropdown
+    barangaySelect.innerHTML = '<option value="all">All Barangays</option>';
+    
+    if (cityFilter === 'all') {
+        barangaySelect.disabled = true;
+        updateChartWithFilters();
+        return;
+    }
+    
+    // Get unique barangays for selected city
+    const barangays = [...new Set(
+        complaints
+            .filter(c => c.region === regionFilter && c.province === provinceFilter && c.city === cityFilter)
+            .map(c => c.barangay)
+    )].sort();
+    
+    barangays.forEach(barangay => {
+        const option = document.createElement('option');
+        option.value = barangay;
+        option.textContent = barangay;
+        barangaySelect.appendChild(option);
+    });
+    
+    barangaySelect.disabled = false;
+    updateChartWithFilters();
+}
+
+function clearChartFilters() {
+    // Reset period filter
+    document.getElementById('chartPeriod').value = 'all';
+    
+    // Reset location filters
+    document.getElementById('chartRegionFilter').value = 'all';
+    document.getElementById('chartProvinceFilter').innerHTML = '<option value="all">All Provinces</option>';
+    document.getElementById('chartProvinceFilter').disabled = true;
+    document.getElementById('chartCityFilter').innerHTML = '<option value="all">All Cities</option>';
+    document.getElementById('chartCityFilter').disabled = true;
+    document.getElementById('chartBarangayFilter').innerHTML = '<option value="all">All Barangays</option>';
+    document.getElementById('chartBarangayFilter').disabled = true;
+    
+    // Update chart
+    updateChartWithFilters();
 }

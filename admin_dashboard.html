@@ -97,14 +97,81 @@
                             <h3>Most Common Complaint Types</h3>
                             <p class="chart-subtitle">Distribution of complaints by category</p>
                         </div>
-                        <select id="chartPeriod" class="chart-period-select">
-                            <option value="all">All Time</option>
-                            <option value="month">This Month</option>
-                            <option value="week">This Week</option>
-                        </select>
                     </div>
+                    
+                    <!-- Chart Filters -->
+                    <div class="chart-filters">
+                        <div class="chart-filter-group">
+                            <label class="chart-filter-label">Time Period</label>
+                            <select id="chartPeriod" class="chart-filter-select">
+                                <option value="all">All Time</option>
+                                <option value="year">This Year</option>
+                                <option value="month">This Month</option>
+                                <option value="week">This Week</option>
+                            </select>
+                        </div>
+                        
+                        <div class="chart-filter-group">
+                            <label class="chart-filter-label">Region</label>
+                            <select id="chartRegionFilter" class="chart-filter-select">
+                                <option value="all">All Regions</option>
+                            </select>
+                        </div>
+                        
+                        <div class="chart-filter-group">
+                            <label class="chart-filter-label">Province</label>
+                            <select id="chartProvinceFilter" class="chart-filter-select" disabled>
+                                <option value="all">All Provinces</option>
+                            </select>
+                        </div>
+                        
+                        <div class="chart-filter-group">
+                            <label class="chart-filter-label">City/Municipality</label>
+                            <select id="chartCityFilter" class="chart-filter-select" disabled>
+                                <option value="all">All Cities</option>
+                            </select>
+                        </div>
+                        
+                        <div class="chart-filter-group">
+                            <label class="chart-filter-label">Barangay</label>
+                            <select id="chartBarangayFilter" class="chart-filter-select" disabled>
+                                <option value="all">All Barangays</option>
+                            </select>
+                        </div>
+                        
+                        <div class="chart-filter-group">
+                            <label class="chart-filter-label" style="opacity: 0; pointer-events: none;">Actions</label>
+                            <button id="clearChartFiltersBtn" class="btn-clear-chart-filters" onclick="clearChartFilters()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                    
                     <div class="chart-container">
                         <canvas id="complaintChart"></canvas>
+                    </div>
+                    
+                    <div class="chart-toggle-section">
+                        <button id="toggleSubcategoryBtn" class="btn-toggle-subcategory" onclick="toggleSubcategoryChart()">
+                            <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                            View Detailed Breakdown by Subcategory
+                        </button>
+                    </div>
+                    
+                    <div id="subcategoryChartSection" class="subcategory-chart-section" style="display: none;">
+                        <div class="subcategory-header">
+                            <h4>Complaint Subcategories Breakdown</h4>
+                            <p class="subcategory-subtitle">Detailed view of complaints by subcategory</p>
+                        </div>
+                        <div class="chart-container chart-container-subcategory">
+                            <canvas id="subcategoryChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -111,62 +111,62 @@
                             <h3 class="section-title">Complete Address *</h3>
                             
                             <div class="form-group">
-                                <label for="streetAddress">Street Address / House No. & Street Name</label>
+                                <label for="region">Region *</label>
+                                <select type="text" id="region" name="region" required></select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="province">Province *</label>
+                                <select id="province" name="province" required>
+                                    <option value="">Select province</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="city">City/Municipality *</label>
+                                <select id="city" name="city" required >
+                                    <option value="">Select city/municipality</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="barangay">Barangay *</label>
+                                <select id="barangay" name="barangay" required >
+                                    <option value="">Select barangay</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="street">Street/Road *</label>
                                 <input 
                                     type="text" 
-                                    id="streetAddress" 
-                                    name="streetAddress" 
-                                    placeholder="123 Rizal Street"
+                                    id="street" 
+                                    name="street" 
+                                    placeholder="e.g., Rizal Street"
                                     required
                                 >
                             </div>
 
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="barangay">Barangay</label>
+                                    <label for="houseNumber">House/Building No.</label>
                                     <input 
                                         type="text" 
-                                        id="barangay" 
-                                        name="barangay" 
-                                        placeholder="Barangay San Jose"
-                                        required
+                                        id="houseNumber" 
+                                        name="houseNumber" 
+                                        placeholder="e.g., 123"
                                     >
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="city">City / Municipality</label>
-                                    <input 
-                                        type="text" 
-                                        id="city" 
-                                        name="city" 
-                                        placeholder="Manila"
-                                        required
-                                    >
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="province">Province</label>
-                                    <input 
-                                        type="text" 
-                                        id="province" 
-                                        name="province" 
-                                        placeholder="Metro Manila"
-                                        required
-                                    >
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="zipCode">Zip Code</label>
+                                    <label for="zipCode">ZIP Code</label>
                                     <input 
                                         type="text" 
                                         id="zipCode" 
                                         name="zipCode" 
-                                        placeholder="1000"
-                                        pattern="[0-9]{4}"
+                                        placeholder="e.g., 1000"
                                         maxlength="4"
-                                        required
+                                        pattern="[0-9]{4}"
                                     >
                                 </div>
                             </div>
@@ -245,6 +245,12 @@
         </div>
     </main>
 
+    <!-- JQuery for Address Selector -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <!-- Script for Address Selector -->
+    <script src="ph-address-selector.js"></script>
+    
     <script src="sign_up.js"></script>
 </body>
 </html>

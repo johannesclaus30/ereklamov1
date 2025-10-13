@@ -1,4 +1,5 @@
-// Mock complaint data
+// Mock complaint data - using dynamic dates for testing
+const today = new Date();
 const complaints = [
     {
         id: '1',
@@ -6,10 +7,10 @@ const complaints = [
         category: 'Infrastructure',
         subcategory: 'Road Damage',
         description: 'Large pothole on Main Street causing traffic issues',
-        location: '123 Main Street',
+        location: 'Barangay 1',
         status: 'in-progress',
-        dateSubmitted: '2024-01-15',
-        lastUpdated: '2024-01-20'
+        dateSubmitted: new Date(today.getTime() - 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 5 days ago
+        lastUpdated: new Date(today.getTime() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     },
     {
         id: '2',
@@ -17,32 +18,43 @@ const complaints = [
         category: 'Public Safety',
         subcategory: 'Street Lighting',
         description: 'Broken street light near the park',
-        location: '456 Park Avenue',
+        location: 'Barangay 2',
         status: 'resolved',
-        dateSubmitted: '2024-01-10',
-        lastUpdated: '2024-01-18'
+        dateSubmitted: new Date(today.getTime() - 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 15 days ago
+        lastUpdated: new Date(today.getTime() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     },
     {
         id: '3',
         trackingNumber: 'ERK-2024-001298',
-        category: 'Sanitation',
+        category: 'Health and Sanitation',
         subcategory: 'Waste Collection',
         description: 'Garbage not collected for 3 weeks',
-        location: '789 Oak Street',
+        location: 'Barangay 3',
         status: 'pending',
-        dateSubmitted: '2024-01-22',
-        lastUpdated: '2024-01-22'
+        dateSubmitted: new Date(today.getTime() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 2 days ago
+        lastUpdated: new Date(today.getTime() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     },
     {
         id: '4',
         trackingNumber: 'ERK-2024-001056',
-        category: 'Noise Complaint',
-        subcategory: 'Construction',
+        category: 'Peace and Order',
+        subcategory: 'Noise Disturbance',
         description: 'Construction noise at night beyond permitted hours',
-        location: '321 Elm Street',
+        location: 'Barangay 1',
         status: 'rejected',
-        dateSubmitted: '2024-01-05',
-        lastUpdated: '2024-01-12'
+        dateSubmitted: new Date(today.getTime() - 45 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 45 days ago
+        lastUpdated: new Date(today.getTime() - 40 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    },
+    {
+        id: '5',
+        trackingNumber: 'ERK-2024-002001',
+        category: 'Environment',
+        subcategory: 'Illegal Dumping',
+        description: 'Illegal waste dumping site near residential area',
+        location: 'Barangay 2',
+        status: 'pending',
+        dateSubmitted: new Date(today.getTime() - 200 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 200 days ago (last year)
+        lastUpdated: new Date(today.getTime() - 200 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     }
 ];
 
@@ -65,20 +77,26 @@ window.addEventListener('DOMContentLoaded', function() {
     const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
     document.getElementById('userEmail').textContent = userEmail;
     
-    updateStats();
+    populateLocationFilter();
     renderComplaints(complaints);
 });
 
-function updateStats() {
-    const total = complaints.length;
-    const pending = complaints.filter(c => c.status === 'pending').length;
-    const progress = complaints.filter(c => c.status === 'in-progress').length;
-    const resolved = complaints.filter(c => c.status === 'resolved').length;
-
-    document.getElementById('totalCount').textContent = total;
-    document.getElementById('pendingCount').textContent = pending;
-    document.getElementById('progressCount').textContent = progress;
-    document.getElementById('resolvedCount').textContent = resolved;
+function populateLocationFilter() {
+    const locationFilter = document.getElementById('locationFilter');
+    
+    // Get unique locations from complaints
+    const locations = [...new Set(complaints.map(c => c.location))].sort();
+    
+    // Clear existing options except "All Locations"
+    locationFilter.innerHTML = '<option value="all">All Locations</option>';
+    
+    // Add location options
+    locations.forEach(location => {
+        const option = document.createElement('option');
+        option.value = location;
+        option.textContent = location;
+        locationFilter.appendChild(option);
+    });
 }
 
 function renderComplaints(complaintsToRender) {
@@ -91,9 +109,11 @@ function renderComplaints(complaintsToRender) {
         
         const searchTerm = document.getElementById('searchInput').value;
         const filterStatus = document.getElementById('statusFilter').value;
+        const filterTime = document.getElementById('timeFilter').value;
+        const filterLocation = document.getElementById('locationFilter').value;
         
-        if (searchTerm || filterStatus !== 'all') {
-            document.getElementById('emptyMessage').textContent = 'Try adjusting your search or filters';
+        if (searchTerm || filterStatus !== 'all' || filterTime !== 'all' || filterLocation !== 'all') {
+            document.getElementById('emptyMessage').textContent = 'No complaints match your current filters. Try adjusting your search or filters.';
         } else {
             document.getElementById('emptyMessage').textContent = "You haven't submitted any complaints yet";
         }
@@ -167,16 +187,54 @@ function renderComplaints(complaintsToRender) {
 function filterComplaints() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     const filterStatus = document.getElementById('statusFilter').value;
+    const filterTime = document.getElementById('timeFilter').value;
+    const filterLocation = document.getElementById('locationFilter').value;
     
     const filtered = complaints.filter(complaint => {
+        // Search filter
         const matchesSearch = complaint.trackingNumber.toLowerCase().includes(searchTerm) ||
                              complaint.category.toLowerCase().includes(searchTerm) ||
                              complaint.description.toLowerCase().includes(searchTerm);
+        
+        // Status filter
         const matchesStatus = filterStatus === 'all' || complaint.status === filterStatus;
-        return matchesSearch && matchesStatus;
+        
+        // Location filter
+        const matchesLocation = filterLocation === 'all' || complaint.location === filterLocation;
+        
+        // Time filter
+        const matchesTime = filterByTime(complaint.dateSubmitted, filterTime);
+        
+        return matchesSearch && matchesStatus && matchesLocation && matchesTime;
     });
     
     renderComplaints(filtered);
+}
+
+function filterByTime(dateSubmitted, timeFilter) {
+    if (timeFilter === 'all') {
+        return true;
+    }
+    
+    const submittedDate = new Date(dateSubmitted);
+    const now = new Date();
+    
+    // Set hours to 0 for accurate date comparison
+    submittedDate.setHours(0, 0, 0, 0);
+    now.setHours(0, 0, 0, 0);
+    
+    const daysDiff = Math.floor((now - submittedDate) / (1000 * 60 * 60 * 24));
+    
+    switch (timeFilter) {
+        case 'week':
+            return daysDiff <= 7;
+        case 'month':
+            return daysDiff <= 30;
+        case 'year':
+            return daysDiff <= 365;
+        default:
+            return true;
+    }
 }
 
 function viewComplaintDetails(trackingNumber) {

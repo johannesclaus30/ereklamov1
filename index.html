@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- JQuery for Address Selector -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <title>Submit Complaint - eReklamo</title>
     <link rel="stylesheet" href="index.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -77,7 +80,7 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="category">Complaint Category *</label>
+                                <label for="category">Category *</label>
                                 <select id="category" name="category" required>
                                     <option value="">Select a category</option>
                                     <option value="infrastructure">Infrastructure</option>
@@ -91,7 +94,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="subcategory">Complaint Subcategory *</label>
+                                <label for="subcategory">Subcategory *</label>
                                 <select id="subcategory" name="subcategory" required disabled>
                                     <option value="">Select a subcategory</option>
                                 </select>
@@ -123,18 +126,68 @@
                             </div>
                         </div>
 
+                        <!-- Dynamic Location Dropdowns - Implement cascading logic with Fetch API -->
                         <div class="form-group">
-                            <label for="location">Location *</label>
+                            <label for="region">Region *</label>
+                            <select id="region" name="region" required></select>
+                            <p class="field-hint">Select the region</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="province">Province *</label>
+                            <select id="province" name="province" required ></select>
+                            <p class="field-hint">Select the province</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="city">City/Municipality *</label>
+                            <select id="city" name="city" required ></select>
+                            <p class="field-hint">Select the city or municipality</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="barangay">Barangay *</label>
+                            <select id="barangay" name="barangay" required ></select>
+                            <p class="field-hint">Select the barangay</p>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="street">Street/Road *</label>
+                                <input 
+                                    type="text" 
+                                    id="street" 
+                                    name="street" 
+                                    placeholder="e.g., Main Street"
+                                    required
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label for="landmark">Landmark</label>
+                                <input 
+                                    type="text" 
+                                    id="landmark" 
+                                    name="landmark" 
+                                    placeholder="e.g., Near Brgy. Hall"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="zipCode">ZIP Code</label>
                             <input 
                                 type="text" 
-                                id="location" 
-                                name="location" 
-                                placeholder="e.g., Main Street, Corner 5th Avenue"
-                                required
+                                id="zipCode" 
+                                name="zipCode" 
+                                placeholder="e.g., 1000"
+                                maxlength="4"
                             >
-                            <p class="field-hint">Please provide the exact location of the issue</p>
+                            <p class="field-hint">Postal code (optional)</p>
                         </div>
                     </div>
+
+                    <!-- Script for Address Selector -->
+                    <script src="ph-address-selector.js"></script>
 
                     <!-- Upload Section -->
                     <div class="form-section">
@@ -251,11 +304,11 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <div class="form-actions-bottom">
+                    <div class="form-actions">
                         <button type="button" class="btn btn-outline" onclick="window.location.href='landing_page.html'">
                             Cancel
                         </button>
-                        <button type="submit" class="btn btn-primary btn-large">
+                        <button type="submit" class="btn btn-primary btn-large" onclick="window.location.href='tracking_page.html'">
                             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                 <polyline points="9 11 12 14 22 4"></polyline>
                                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>

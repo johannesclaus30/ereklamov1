@@ -13,12 +13,17 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <img class="ereklamo-logo" src="logos/eReklamo_White.png" />
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <h1 class="logo-text">eReklamo</h1>
                 </div>
                 <nav class="nav">
                     <span class="user-email" id="userEmail">user@example.com</span>
                     <a href="landing_page.html" class="btn btn-outline-white">Home</a>
-                    <a href="sign_in.html" class="btn btn-outline-white">Sign Out</a>
+                    <a href="landing_page.html" class="btn btn-outline-white">Sign Out</a>
                 </nav>
             </div>
         </div>
@@ -31,26 +36,6 @@
             <div class="welcome-section">
                 <h2>My Complaints Dashboard</h2>
                 <p>Track and manage all your submitted complaints in one place</p>
-            </div>
-
-            <!-- Stats Cards -->
-            <div class="stats-grid">
-                <div class="stat-card stat-total">
-                    <div class="stat-label">Total Complaints</div>
-                    <div class="stat-value" id="totalCount">4</div>
-                </div>
-                <div class="stat-card stat-pending">
-                    <div class="stat-label">Pending Review</div>
-                    <div class="stat-value" id="pendingCount">1</div>
-                </div>
-                <div class="stat-card stat-progress">
-                    <div class="stat-label">In Progress</div>
-                    <div class="stat-value" id="progressCount">1</div>
-                </div>
-                <div class="stat-card stat-resolved">
-                    <div class="stat-label">Resolved</div>
-                    <div class="stat-value" id="resolvedCount">1</div>
-                </div>
             </div>
 
             <!-- Actions Bar -->
@@ -68,7 +53,17 @@
                         onkeyup="filterComplaints()"
                     />
                 </div>
-                <div class="action-buttons">
+                <div class="filter-group">
+                    <select id="timeFilter" class="filter-select" onchange="filterComplaints()">
+                        <option value="all">All Time</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="year">This Year</option>
+                    </select>
+                    <select id="locationFilter" class="filter-select" onchange="filterComplaints()">
+                        <option value="all">All Locations</option>
+                        <!-- Locations will be populated dynamically -->
+                    </select>
                     <select id="statusFilter" class="filter-select" onchange="filterComplaints()">
                         <option value="all">All Status</option>
                         <option value="pending">Pending</option>
@@ -76,16 +71,16 @@
                         <option value="resolved">Resolved</option>
                         <option value="rejected">Rejected</option>
                     </select>
-                    <a href="index.html" class="btn btn-primary">
-                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="12" y1="18" x2="12" y2="12"></line>
-                            <line x1="9" y1="15" x2="15" y2="15"></line>
-                        </svg>
-                        New Complaint
-                    </a>
                 </div>
+                <a href="index.html" class="btn btn-primary">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="12" y1="18" x2="12" y2="12"></line>
+                        <line x1="9" y1="15" x2="15" y2="15"></line>
+                    </svg>
+                    New Complaint
+                </a>
             </div>
 
             <!-- Complaints List -->
